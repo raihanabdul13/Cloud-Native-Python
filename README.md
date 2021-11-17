@@ -1,3 +1,3 @@
 #Cloud-Navtive-Python
-#Nama	: Raihan abdul qoshid
-#Nim	: 151911513013
+#NAMA	: Raihan abdul qoshid
+#NIM	: 151911513013
