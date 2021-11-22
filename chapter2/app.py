@@ -40,5 +40,28 @@ def list_users():
 
     conn.close()
     return jsonify({'user_list': api_list})
+
+
+@app.route('/api/v1/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    return list_user(user_id)
+
+def list_user(user_id):
+    conn = sqlite3.connect('mydb.db')
+    print ("Opened database Successfully");
+    api_list=[]
+    cursor=conn.cursor()
+    cursor.execute("SELECT * FROM users where id=?",(user_id,))
+    data = cursor.fetchall()
+    if len(data) != 0:
+       user = {}
+       user['username'] = data[0][0]
+       user['fullname'] = data[0][3]
+       user['emailid'] = data[0][1]
+       user['password'] = data[0][2]
+       user['id'] = data[0][4]
+    conn.close()
+    return jsonify(user)
+
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=5000, debug=True)
