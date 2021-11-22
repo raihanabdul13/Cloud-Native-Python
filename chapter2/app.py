@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 import json
 import sqlite3
+from flask import make_response
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULER'] = False
 @app.route("/api/v1/info")
@@ -63,5 +64,12 @@ def list_user(user_id):
     conn.close()
     return jsonify(user)
 
+@app.errorhandler(404)
+def resource_not_found(error):
+    return make_response(jsonify({'error':
+    'Resource not found!'}), 404)
+
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
