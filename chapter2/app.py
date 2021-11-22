@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 import json
 import sqlite3
+from flask import abort
 from time import gmtime, strftime
 from flask import request
 from flask import make_response
@@ -69,7 +70,7 @@ def list_user(user_id):
 @app.route('/api/v1/users', methods=['POST'])
 def create_user():
     if not request.json or not 'username' in request.json or not 'emailid' in request.json or not 'full_name' in request.json or not 'password' in request.json:
-        abort(400)
+        abord(400)
     user = {
         'username': request.json['username'],
         'emailid': request.json['emailid'],
@@ -97,7 +98,7 @@ def add_user(new_user):
 @app.route('/api/v1/users', methods=['DELETE'])
 def delete_user():
     if not request.json or not 'username' in request.json:
-       abord(400)
+       abort(400)
     user=request.json['username']
     return jsonify({'status': del_user(user)}), 200
 
@@ -134,7 +135,7 @@ def upd_user(user):
     cursor.execute("SELECT * FROM users WHERE id=? ", (user['id'],))
     data = cursor.fetchall()
     if len (data) == 0:
-       abord(404)
+       abort(404)
     else:
        key_list=user.keys()
        for i in key_list:
@@ -180,7 +181,7 @@ def list_tweets():
 def add_tweets():
     user_tweet = {}
     if not request.json or not 'username' in request.json or not 'body' in request.json:
-       abort(400)
+        abort(400)
     user_tweet['username'] = request.json['username']
     user_tweet['body'] = request.json['body']
     user_tweet['created_at']=strftime("%Y-%m-%dT%H:%M:%SZ", gmtime())
@@ -197,8 +198,8 @@ def add_tweet(new_tweets):
        abort(404)
     else:
        cursor.execute("INSERT INTO tweets (username, body, tweet_time) values(?,?,?)",(new_tweets['username'],new_tweets['body'], new_tweets['created_at']))
-       conn.commit()
-       return "Success"
+    conn.commit()
+    return "Success"
 
 @app.route('/api/v2/tweets/<int:id>', methods=['GET'])
 def get_tweet(id):
@@ -214,7 +215,7 @@ def list_tweet(user_id):
     data = cursor.fetchall()
     print (data)
     if len(data) == 0:
-       abord(404)
+       abort(404)
     else:
        user={}
        user['id'] = data[0][0]
@@ -230,8 +231,11 @@ def invalid_request(error):
 
 @app.errorhandler(404)
 def resource_not_found(error):
-    return make_response(jsonify({'error':
-    'Resource not found!'}), 404)
+    return make_response(jsonify({'error':'Resource not found!'}), 404)
+
+@app.errorhandler(409)
+def user_found(error):
+    return make_response(jsonify({'error': 'Conflict! Record exist'}), 409)
 
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=5000, debug=True)
