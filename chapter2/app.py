@@ -200,6 +200,30 @@ def add_tweet(new_tweets):
        conn.commit()
        return "Success"
 
+@app.route('/api/v2/tweets/<int:id>', methods=['GET'])
+def get_tweet(id):
+    return list_tweet(id)
+
+def list_tweet(user_id):
+    print (user_id)
+    conn = sqlite3.connect('mydb.db')
+    print ("Opened database Successfully");
+    api_list=[]
+    cursor=conn.cursor()
+    cursor.execute("SELECT * FROM tweets where id=? ", (user_id,))
+    data = cursor.fetchall()
+    print (data)
+    if len(data) == 0:
+       abord(404)
+    else:
+       user={}
+       user['id'] = data[0][0]
+       user['username']= data[0][1]
+       user['body'] = data[0][2]
+       user['tweet_time']= data[0][3]
+    conn.close()
+    return jsonify(user) 
+
 @app.errorhandler(400)
 def invalid_request(error):
      return make_response(jsonify({'error': 'Bad Request'}), 400)
