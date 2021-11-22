@@ -93,6 +93,28 @@ def add_user(new_user):
     conn.close()
     return jsonify(a_dict)
 
+@app.route('/api/v1/users', methods=['DELETE'])
+def delete_user():
+    if not request.json or not 'username' in request.json:
+       abord(400)
+    user=request.json['username']
+    return jsonify({'status': del_user(user)}), 200
+
+def del_user(del_user):
+    conn = sqlite3.connect('mydb.db')
+    print ("Openend database successfully");
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users where username=?", (del_user,))
+    data = cursor.fetchall()
+    print ("Data", data)
+    if len (data) == 0:
+       abord(404)
+    else:
+       cursor.execute("DELETE FROm users WHERE username==?", (del_user,))
+    conn.commit()
+    return "Success"
+
+
 @app.errorhandler(400)
 def invalid_request(error):
      return make_response(jsonify({'error': 'Bad Request'}), 400)
