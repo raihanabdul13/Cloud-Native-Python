@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import json
 import sqlite3
 from flask import abort
@@ -7,6 +7,11 @@ from flask import request
 from flask import make_response
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULER'] = False
+
+@app.route('/adduser')
+def adduser():
+    return render_template('adduser.html')
+
 @app.route("/api/v1/info")
 
 def home_index():
@@ -36,7 +41,7 @@ def list_users():
     for row in cursor:
         a_dict = {}
         a_dict['username'] = row[0]
-        a_dict['fullname'] = row[1]
+        a_dict['full_name'] = row[1]
         a_dict['emailid'] = row[2]
         a_dict['password'] = row[3]
         a_dict['id'] = row[4]
