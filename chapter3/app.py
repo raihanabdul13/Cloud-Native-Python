@@ -12,6 +12,10 @@ app.config['JSONIFY_PRETTYPRINT_REGULER'] = False
 def adduser():
     return render_template('adduser.html')
 
+@app.route('/addtweets')
+def addtweetjs():
+    return render_template('addtweets.html')
+
 @app.route("/api/v1/info")
 
 def home_index():
