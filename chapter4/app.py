@@ -149,7 +149,7 @@ def add_tweet(new_tweet):
     if api_list == []:
        abort(404)
     else:
-        db_tweet.insert(new_tweet)
+        db_tweet.insert_one(new_tweet)
         return "Success"
 
 def upd_user(user):
@@ -248,6 +248,10 @@ def update_user(user_id):
 @app.route('/api/v2/tweets', methods=['GET'])
 def get_tweets():
     return list_tweets()
+
+@app.route('/api/v2/tweets/<int:user_id>', methods=['GET'])
+def get_tweet(user_id):
+    return list_tweet(user_id)
 
 @app.route('/api/v2/tweets', methods=['POST'])
 def add_tweets():
