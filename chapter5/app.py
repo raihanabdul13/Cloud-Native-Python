@@ -7,7 +7,9 @@ import json
 import random
 from pymongo import MongoClient
 from time import gmtime, strftime
-import sqlite3
+from flask_pymongo import PyMongo
+from flask_mongoalchemy import MongoAlchemy
+import json,sqlite3,random,bcrypt
 
 # connection to MongoDB Database
 connection = MongoClient("mongodb://localhost:27017/")
@@ -153,8 +155,11 @@ def home():
 @app.route('/index')
 def index():
 	return render_template('index.html')
-
-
+def cookie_insertion():
+	redirect_to_main = redirect('/')
+	response = current_app.make_response(redirect_to_main )
+	response.set_cookie('cookie_name',value='values')
+	return response
 
 # List users
 def list_users():

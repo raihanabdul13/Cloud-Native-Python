@@ -1,4 +1,6 @@
 import Tweet from "./components/Tweet";
+import TweetList from "./components/TweetList";
+import cookie from 'react-cookie';
 
 class Main extends React.Component{
   constructor(props){
@@ -6,8 +8,13 @@ class Main extends React.Component{
     this.state =  { userId: cookie.load('session') };
     this.state={tweets:[]}
   }
+addTweet(tweet){
+     let newTweet = this.state.tweets;
+     newTweet.unshift({'id': Date(), 'username': 'guest','body': tweet})
+     this.setState({tweets: newTweet})
+	}
   // function to post tweets
-  addTweet(tweet){
+ /* addTweet(tweet){
     var self = this;
     $.ajax({
   	    url: '/api/v2/tweets',
@@ -29,6 +36,7 @@ class Main extends React.Component{
     }
     });
   }
+*/
 // function to pull tweets
   componentDidMount() {
     var self=this;
